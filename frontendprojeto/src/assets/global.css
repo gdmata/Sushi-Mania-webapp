@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght,GRAD@6..144,1..1000,60&family=Rubik+Dirt&display=swap');
+
+* {
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Rubik Dirt';
+  font-weight: bold;
+  font-size: 5rem;
+}
