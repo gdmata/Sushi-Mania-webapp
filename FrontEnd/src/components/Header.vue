@@ -1,11 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-const home = ref('/home')
+const src = ref('src/assets/logo.png')
 const menu = ref('/menu')
 const address = ref('/endereco')
 const contact = ref('/contato')
-const login = ref('/login')
-const register = ref('/register')
 const name = ref(['Sushi', 'Mania'])
 const subTitle = ref('Culinária Oriental')
 //
@@ -19,28 +17,24 @@ const toggleMenu = () => {
   <header>
     <nav class="navbar">
       <div class="logo">
-        <span class="logo-top">
-          {{ name[0] }}
-        </span>
-        <span class="logo-bottom">
-          {{ name[1] }}
-        </span>
+        <span><img class="logo-img" :src /> </span>
+
         <button class="hamburger" @click="toggleMenu">
           <span>{{ isMenuOpen ? 'X' : '☰' }}</span>
         </button>
       </div>
       <ul class="nav-links" :class="{ open: isMenuOpen }">
-        <li><router-link :to="home"> Início </router-link></li>
+        <li><router-link :to="{ name: 'Home' }"> Início </router-link></li>
         <li><router-link :to="menu">Cardápio</router-link></li>
-        <li><router-link :to="address">Endereço</router-link></li>
-        <li><router-link :to="contact">Contato</router-link></li>
-        <li><router-link :to="login">Login</router-link></li>
-        <li><router-link :to="register">Registrar</router-link></li>
+        <li><router-link :to="{ name: 'AuthenticationView' }">Entrar/Cadastrar</router-link></li>
       </ul>
     </nav>
   </header>
 </template>
 <style scoped>
+.logo-img {
+  width: 90px;
+}
 .navbar {
   display: flex;
   justify-content: space-between;
