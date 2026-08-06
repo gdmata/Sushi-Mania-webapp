@@ -4,7 +4,7 @@ import Header from './components/Header.vue'
 import Home from './Views/Home.vue'
 import Footer from './components/Footer.vue'
 import AuthView from './Views/AuthView.vue'
-AuthView
+import MenuView from './Views/MenuView.vue'
 </script>
 
 <template>
