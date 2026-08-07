@@ -89,7 +89,7 @@ const formattedMenu = computed(() => {
 
 const getMenu = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/menu`, {
+    const response = await api.get(`/menu`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },

@@ -33,7 +33,7 @@ const handleRegister = async () => {
   }
 
   try {
-    const register = await axios.post(`${import.meta.env.VITE_API_URL}/register`, {
+    const register = await api.post(`/register`, {
       userName: name,
       email,
       userPhone: phone,
@@ -48,7 +48,7 @@ const handleRegister = async () => {
 const handleLogin = async () => {
   const { email, password } = loginForm.value
   try {
-    const login = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+    const login = await api.post(`/login`, {
       email,
       password,
     })
