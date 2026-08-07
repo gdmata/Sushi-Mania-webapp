@@ -69,7 +69,6 @@ import api from '@/services/api'
 import { useCartStore } from '@/stores/cart'
 import axios from 'axios'
 import { ref, onMounted, computed } from 'vue'
-import{ref, onMounted, computed} from 'vue'
 const cartStore = useCartStore()
 const menuCategories = ref([])
 const isLoading = ref(true)
