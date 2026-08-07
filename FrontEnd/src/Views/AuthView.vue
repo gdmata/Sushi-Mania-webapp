@@ -1,4 +1,5 @@
 <script setup>
+import api from '@/services/api'
 import axios from 'axios'
 import { ref } from 'vue'
 
@@ -32,7 +33,7 @@ const handleRegister = async () => {
   }
 
   try {
-    const register = await axios.post(`http://localhost:3000/register`, {
+    const register = await api.post(`/register`, {
       userName: name,
       email,
       userPhone: phone,
@@ -47,7 +48,7 @@ const handleRegister = async () => {
 const handleLogin = async () => {
   const { email, password } = loginForm.value
   try {
-    const login = await axios.post('http://localhost:3000/login', {
+    const login = await axios.post('/login', {
       email,
       password,
     })
