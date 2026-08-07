@@ -5,12 +5,13 @@ import Home from './Views/Home.vue'
 import Footer from './components/Footer.vue'
 import AuthView from './Views/AuthView.vue'
 import MenuView from './Views/MenuView.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto">
     <Header />
-    <RouterView />
+    <RouterView/>
 
     <Footer />
   </div>

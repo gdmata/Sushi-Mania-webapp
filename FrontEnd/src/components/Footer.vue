@@ -227,4 +227,25 @@ footer .link:hover {
 .copyright-bar span {
   color: #ff4d4d;
 }
+
+@media (max-width: 376px) {
+
+ .link {
+  width: 7vw;
+  display: flex;
+  flex-direction: row
+ }
+ .column{
+  display: flex;
+  flex-direction: row;
+  width: 70vw;
+ }
+ .footer-layout{
+  width: 100vw;
+  font-size: small;
+ }
+}
+
+
+
 </style>

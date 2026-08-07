@@ -1,53 +1,56 @@
 const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
+const { MongoClient } = require("mongodb");
+
 const orderRoutes = require("./src/routes/orderRoutes");
 const userRoutes = require("./src/routes/userRoutes");
-const cors = require("cors");
 const authCheck = require("./src/routes/authRoute");
-//
-//
+const menuRoute = require("./src/routes/menuRoute");
+
 const app = express();
-exports.app = app;
 app.use(express.json());
 app.use(cors());
-//
-//
-// Importando as rotas
+
 app.use(express.static("public"));
 app.use(express.static("src"));
-//
-app.use(authCheck);
-app.use(orderRoutes);
-app.use(userRoutes);
-///
-//MONGO DB
+
+// MongoDB Connection Logic
 const url = process.env.MONGO_URL;
-const { MongoClient } = require("mongodb");
-const test = require("node:test");
 const client = new MongoClient(url);
 let db;
 
 async function connectToMongoDB() {
-  try {
-    await client.connect();
-    console.log("Você se conectou com sucesso ao MongoDB Atlas!");
-    // Define o nome do banco de dados que você quer usar
-    db = client.db("SushiManiaDB");
-
-    app.locals.db = db;
-    return db;
-  } catch (erro) {
-    console.error("Erro ao conectar no MongoDB:", erro);
-  }
+  if (db) return db;
+  await client.connect();
+  db = client.db("SushiManiaDB");
+  app.locals.db = db;
+  return db;
 }
-//
 
-//
-
-//LIGA SERVER DE MINECRAFT
-
-connectToMongoDB().then(() => {
-  app.listen(3000, () => {
-    console.log("server tá on");
-  });
+// Middleware: Ensure DB is connected for every request
+app.use(async (req, res, next) => {
+  try {
+    await connectToMongoDB();
+    next();
+  } catch (error) {
+    console.error("MongoDB Connection Error:", error);
+    res.status(500).json({ error: "Erro na conexão com o banco de dados" });
+  }
 });
+
+// Register routes
+app.use(authCheck);
+app.use(orderRoutes);
+app.use(userRoutes);
+app.use(menuRoute);
+
+// Start server locally when not on Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
+}
+
+// Export for Vercel Serverless
+module.exports = app;
