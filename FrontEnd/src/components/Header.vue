@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-const src = ref('src/assets/logo.png')
+const src = ref('https://i.ibb.co/pvhpLkMk/logo.png')
 const menu = ref('/menu')
 const address = ref('/endereco')
 const contact = ref('/contato')
