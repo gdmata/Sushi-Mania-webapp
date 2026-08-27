@@ -1,14 +1,26 @@
 <script setup>
 import api from '@/services/api'
-import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+
+const router = useRouter()
+
+const errorMessage = ref('')
+const successMessage = ref('')
 
 const hasAccount = ref(false)
 
+
+const clearMessage = ()=>{
+    errorMessage.value = ''
+  successMessage.value = ''
+}
 const showLogin = () => {
+ clearMessage()
   hasAccount.value = true
 }
 const showRegister = () => {
+ clearMessage()
   hasAccount.value = false
 }
 
@@ -27,11 +39,30 @@ const loginForm = ref({
 
 const handleRegister = async () => {
   const { name, email, password, confirmPassword, phone } = registerForm.value
+ if(!name){
+  errorMessage.value = 'Nome inválido'
+  return
+ }
   if (password !== confirmPassword) {
-    console.log('senhas não coincidem')
+    errorMessage.value = 'As senhas não coincidem'
+    return
+  }
+  if (!email.includes('@')){
+    errorMessage.value = 'E-mail inválido'
     return
   }
 
+
+
+  if (!phone || isNaN(phone) || phone.length < 10 || phone.length > 11){
+    errorMessage.value = 'Telefone inválido'
+    return
+  }
+  if (!name || !email || !password || !confirmPassword || !phone){
+    errorMessage.value = 'Preencha todos os campos'
+    return
+  }
+ clearMessage()
   try {
     const register = await api.post(`/register`, {
       userName: name,
@@ -40,21 +71,33 @@ const handleRegister = async () => {
       password,
     })
     console.log(register)
+    hasAccount.value = true
   } catch (error) {
     console.log(error)
+    errorMessage.value= e.response?.data?.erro || 'Erro ao criar conta'
   }
 }
 
 const handleLogin = async () => {
   const { email, password } = loginForm.value
+clearMessage()
   try {
-    const login = await api.post(`/login`, {
+    const response = await api.post(`/login`, {
       email,
       password,
     })
-    const token = login.data.token
+    const token = response.data.token
     localStorage.setItem('token', token)
+    
+    successMessage.value = 'Login realizado com sucesso! Redirecionando...'
+    const delayRedirect = () =>{
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+    }
+    delayRedirect()
   } catch (e) {
+    errorMessage.value= e.response?.data?.erro || 'E-mail ou senha incorretos.'
     console.error(e)
   }
 }
@@ -67,6 +110,9 @@ const handleLogin = async () => {
       <div v-if="!hasAccount" class="auth-content">
         <h2>Criar <span class="highlight">Conta</span></h2>
         <p class="subtitle">Cadastre-se para fazer seus pedidos!</p>
+        <p class="alert alert-error" v-if="errorMessage !== ''"><span>⚠️</span>{{ errorMessage }}</p>
+        <p class="alert alert-success" v-if="successMessage !== ''"><span>✅</span>{{ successMessage }}</p>
+        
         <form @submit.prevent="handleRegister" class="auth-form">
           <input
             v-model="registerForm.name"
@@ -116,8 +162,13 @@ const handleLogin = async () => {
         </p>
       </div>
       <div v-else class="auth-content">
+        
         <h2>Acessar <span class="highlight">Conta</span></h2>
+        
         <p class="subtitle">Bem-vindo de volta! Entre com seus dados.</p>
+        <p class="alert alert-error" v-if="errorMessage !== ''"><span>⚠️</span>{{ errorMessage }}</p>
+        <p class="alert alert-success" v-if="successMessage !== ''"><span>✅</span>{{ successMessage }}</p>
+        
         <form @submit.prevent="handleLogin" class="auth-form">
           <input
             v-model="loginForm.email"
@@ -142,11 +193,23 @@ const handleLogin = async () => {
           <button @click="showRegister" class="toggle-link">Cadastre-se</button>
         </p>
       </div>
+      
     </div>
   </div>
-</template>
+
+ </template>
 
 <style scoped>
+@keyframes slideDown {
+  from{
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .auth-section {
   background-color: #141414;
   min-height: 75vh;
@@ -241,5 +304,33 @@ const handleLogin = async () => {
 }
 .toggle-link:hover {
   text-decoration: underline;
+}
+.alert{
+  padding: .75rem 1rem;
+  border-radius: 6px;
+  font-size: .9rem;
+ margin: 0;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  bottom: 10px;
+
+  animation: slideDown .3s ease-out forwards;
+}
+.alert-error{
+  background-color: rgba(139, 0,0, .90);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+
+
+
+}
+
+.alert-success{
+  background-color: rgba(46,204,113, .15);
+  border: 1px solid #2ecc71;
+color: #2ecc71;
+
+
 }
 </style>

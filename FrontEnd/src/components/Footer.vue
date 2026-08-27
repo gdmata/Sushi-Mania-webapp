@@ -199,6 +199,12 @@ footer {
   flex: 1;
   min-width: 200px;
   color: #ffffff;
+  gap: 5px;
+}
+h4{
+  position: relative;
+  bottom: 20px;
+  left: 110px;
 }
 .column .link {
   color: #cccccc;
